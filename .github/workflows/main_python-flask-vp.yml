@@ -7,7 +7,7 @@ name: Build and deploy Python app to Azure Web App - Python-Flask-VP
 on:
   push:
     branches:
-      - main
+      - main1
   workflow_dispatch:
 
 jobs:
