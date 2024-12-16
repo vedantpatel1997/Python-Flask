@@ -2,12 +2,12 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - Python-Flask-VP
+name: Build and deploy Python app to Azure Web App - pythonflaskswap
 
 on:
   push:
     branches:
-      - main1
+      - main
   workflow_dispatch:
 
 jobs:
@@ -17,10 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      # - name: Set up Python version
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.12'
 
       # - name: Create and start virtual environment
       #   run: |
@@ -30,7 +30,7 @@ jobs:
       # - name: Install dependencies
       #   run: pip install -r requirements.txt
         
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      # # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -41,13 +41,13 @@ jobs:
           name: python-app
           path: |
             release.zip
-            # !venv/
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'stagging'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -65,14 +65,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_21C4977CC7C6430BB6943B8A8BD15B28 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_365D28545E6D4E689A5343A232590A00 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_36632159AE67457E9D42923FA5BF4BC1 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D0617AA631B14B8A90DD3270CF386108 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AAD50129D5234BBDAF5A21952331B05D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4E454BDD90594E7CBEAE31B5C0FC5663 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'Python-Flask-VP'
-          slot-name: 'Production'
+          app-name: 'pythonflaskswap'
+          slot-name: 'stagging'
           
